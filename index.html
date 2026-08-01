@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard • AI Productivity Task Manager</title>
+  <meta name="description" content="Smart Task Manager Dashboard — view today's tasks, upcoming deadlines, overdue items, habit progress, and AI-powered insights." />
+  <script src="auth-precheck.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css?v=4.0" />
+  <link rel="stylesheet" href="sidebar.css?v=3.0" />
+  <link rel="stylesheet" href="chatbot.css?v=3.0" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <button id="sidebarToggle" class="sidebar-toggle" aria-label="Open sidebar">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div id="sidebarProfileAvatar" class="avatar-container avatar-lg"></div>
+        <h2 id="sidebarUserName">Loading...</h2>
+        <p id="sidebarUserEmail">user@taskflow.dev</p>
+        <p id="sidebarUserPhone"></p>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link active" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a class="sidebar-link" href="tasks.html"><i class="fa-solid fa-list-check"></i> Tasks</a>
+        <a class="sidebar-link" href="calendar.html"><i class="fa-regular fa-calendar-days"></i> Calendar</a>
+        <a class="sidebar-link" href="habits.html"><i class="fa-solid fa-bolt"></i> Habits</a>
+        <a class="sidebar-link" href="reports.html"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+        <a class="sidebar-link" href="settings.html"><i class="fa-solid fa-gear"></i> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a class="logout-btn" href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <!-- AI Motivational & Hero Header -->
+      <header class="hero-card page-hero">
+        <div>
+          <p class="eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Productivity Assistant</p>
+          <h1>Welcome Back, <span id="heroWelcomeName">User</span></h1>
+          <p id="aiMotivationalQuote" class="subtext">"Loading daily motivational spark..."</p>
+          <div class="chip-row">
+            <span class="chip" onclick="window.location.href='tasks.html'"><i class="fa-solid fa-plus"></i> Quick Task</span>
+            <span class="chip" onclick="window.location.href='reports.html'"><i class="fa-solid fa-chart-line"></i> Analytics</span>
+            <span class="chip" onclick="window.location.href='habits.html'"><i class="fa-solid fa-bolt"></i> Daily Habits</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- AI Daily Briefing -->
+      <section class="panel-card" style="padding: 16px 24px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <span style="font-weight: 700; color: var(--accent-primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em;">
+              <i class="fa-solid fa-brain"></i> AI Daily Briefing
+            </span>
+            <p id="aiDailyBriefingText" style="font-size: 0.92rem; color: var(--text-main); margin-top: 4px;">
+              Analyzing your workload and active deliverables...
+            </p>
+          </div>
+          <button id="refreshAiBriefing" class="ghost-btn secondary" style="padding: 6px 14px; font-size: 0.8rem;">
+            <i class="fa-solid fa-rotate-right"></i> Refresh
+          </button>
+        </div>
+      </section>
+
+      <!-- Compact Stat Cards Grid (8 Small Pastel Cards) -->
+      <section class="grid-four" style="gap: 12px; margin-bottom: 8px;">
+        <article class="panel-card" style="padding: 12px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Total Tasks</span>
+            <i class="fa-solid fa-layer-group" style="color: var(--accent-primary); font-size: 1rem;"></i>
+          </div>
+          <strong id="statTotal" style="font-size: 1.35rem; font-weight: 800; color: var(--text-main); margin-top: 4px; display: block;">0</strong>
+        </article>
+
+        <article class="panel-card" style="padding: 12px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Pending</span>
+            <i class="fa-solid fa-clock" style="color: var(--accent-warning); font-size: 1rem;"></i>
+          </div>
+          <strong id="statPending" style="font-size: 1.35rem; font-weight: 800; color: var(--accent-warning); margin-top: 4px; display: block;">0</strong>
+        </article>
+
+        <article class="panel-card" style="padding: 12px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Completed</span>
+            <i class="fa-solid fa-circle-check" style="color: var(--accent-success); font-size: 1rem;"></i>
+          </div>
+          <strong id="statCompleted" style="font-size: 1.35rem; font-weight: 800; color: var(--accent-success); margin-top: 4px; display: block;">0</strong>
+        </article>
+
+        <article class="panel-card" style="padding: 12px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">AI Score</span>
+            <i class="fa-solid fa-bolt" style="color: var(--accent-primary); font-size: 1rem;"></i>
+          </div>
+          <strong id="aiScoreValue" style="font-size: 1.35rem; font-weight: 800; color: var(--accent-primary); margin-top: 4px; display: block;">0%</strong>
+        </article>
+      </section>
+
+      <section class="grid-four" style="gap: 12px; margin-bottom: 8px;">
+        <article class="panel-card" style="padding: 12px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Overdue</span>
+            <i class="fa-solid fa-triangle-exclamation" style="color: var(--accent-danger); font-size: 1rem;"></i>
+          </div>
+          <strong id="dashStatOverdue" style="font-size: 1.35rem; font-weight: 800; color: var(--accent-danger); margin-top: 4px; display: block;">0</strong>
+        </article>
+
+        <article class="panel-card" style="padding: 12px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Task %</span>
+            <i class="fa-solid fa-percent" style="color: var(--accent-primary); font-size: 1rem;"></i>
+          </div>
+          <strong id="dashTaskCompletionPct" style="font-size: 1.35rem; font-weight: 800; color: var(--accent-primary); margin-top: 4px; display: block;">0%</strong>
+        </article>
+
+        <article class="panel-card" style="padding: 12px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Habits Today</span>
+            <i class="fa-solid fa-fire" style="color: var(--accent-warning); font-size: 1rem;"></i>
+          </div>
+          <strong id="dashHabitsDoneToday" style="font-size: 1.35rem; font-weight: 800; color: var(--accent-warning); margin-top: 4px; display: block;">0/0</strong>
+        </article>
+
+        <article class="panel-card" style="padding: 12px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Habit %</span>
+            <i class="fa-solid fa-bolt" style="color: var(--accent-success); font-size: 1rem;"></i>
+          </div>
+          <strong id="dashHabitCompletionPct" style="font-size: 1.35rem; font-weight: 800; color: var(--accent-success); margin-top: 4px; display: block;">0%</strong>
+        </article>
+      </section>
+
+      <!-- Today's Tasks + Habit Progress -->
+      <section class="grid-two">
+        <!-- Today's Tasks -->
+        <article class="panel-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h2 style="margin-bottom:0;"><i class="fa-regular fa-calendar-check"></i> Today's Tasks</h2>
+            <a href="tasks.html" class="ghost-btn secondary" style="font-size:0.78rem; padding:5px 12px;">View All <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+          <div id="dashTodayTaskList">
+            <div class="skeleton skeleton-card" style="height:52px; margin-bottom:8px;"></div>
+            <div class="skeleton skeleton-card" style="height:52px; margin-bottom:8px;"></div>
+          </div>
+        </article>
+
+        <!-- Habit Progress Bars -->
+        <article class="panel-card">
+          <h2 style="margin-bottom:16px;"><i class="fa-solid fa-chart-bar"></i> Habit Progress</h2>
+          <div id="dashHabitProgress">
+            <div class="habit-progress-labeled">
+              <span class="h-label">Weekly Progress</span>
+              <div class="h-bar-wrap"><div class="h-bar-fill" id="dashWeeklyHabitBar" style="width:0%;"></div></div>
+              <span class="h-pct" id="dashWeeklyHabitPct">0%</span>
+            </div>
+            <div class="habit-progress-labeled">
+              <span class="h-label">Monthly Progress</span>
+              <div class="h-bar-wrap"><div class="h-bar-fill" id="dashMonthlyHabitBar" style="width:0%; background:var(--accent-success);"></div></div>
+              <span class="h-pct" id="dashMonthlyHabitPct" style="color:var(--accent-success);">0%</span>
+            </div>
+            <div class="habit-progress-labeled">
+              <span class="h-label">Today's Completion</span>
+              <div class="h-bar-wrap"><div class="h-bar-fill" id="dashTodayHabitBar" style="width:0%; background:var(--accent-warning);"></div></div>
+              <span class="h-pct" id="dashTodayHabitPct" style="color:var(--accent-warning);">0%</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Overdue + Upcoming Tasks -->
+      <section class="grid-two">
+        <!-- Overdue Tasks -->
+        <article class="panel-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h2 style="margin-bottom:0; color:var(--accent-danger);"><i class="fa-solid fa-triangle-exclamation"></i> Overdue Tasks</h2>
+          </div>
+          <div id="dashOverdueTaskList">
+            <p style="color:var(--text-muted); font-size:0.88rem;">Loading...</p>
+          </div>
+        </article>
+
+        <!-- Upcoming Tasks -->
+        <article class="panel-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h2 style="margin-bottom:0;"><i class="fa-regular fa-clock"></i> Upcoming (7 Days)</h2>
+          </div>
+          <div id="dashUpcomingTaskList">
+            <p style="color:var(--text-muted); font-size:0.88rem;">Loading...</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- Daily Habits Today (toggle-able) -->
+      <section class="panel-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h2><i class="fa-solid fa-bolt"></i> Daily Habits Today</h2>
+          <a href="habits.html" class="ghost-btn secondary" style="font-size: 0.8rem; padding: 6px 14px;">Manage Habits <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <ul id="dashboardHabitList" style="list-style: none; display: flex; flex-direction: column; gap: 8px;">
+          <!-- Habits populated dynamically -->
+        </ul>
+      </section>
+
+      <!-- Recent Activity Log -->
+      <section class="panel-card">
+        <h2><i class="fa-solid fa-history"></i> Recent Activity</h2>
+        <ul id="activityLogList" style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
+          <!-- Activity log dynamically loaded -->
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="chatbot.js"></script>
+  <script src="script.js?v=4.0"></script>
+</body>
+
+</html>

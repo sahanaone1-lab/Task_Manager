@@ -1,0 +1,1150 @@
+/* ========================================================================
+   HABITS APP — Professional Habit Tracker Stylesheet
+   Reference: weekly/monthly grid with checkboxes, stats cards, progress
+   ======================================================================== */
+
+/* ── Layout ── */
+.habits-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Stats Row at Top ── */
+.habit-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.habit-stat-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  box-shadow: 0 8px 24px -4px rgba(139, 92, 246, 0.06);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.habit-stat-card:nth-child(1) {
+  background: linear-gradient(135deg, rgba(237, 233, 254, 0.7) 0%, rgba(255, 255, 255, 0.9) 100%);
+  border-color: #C4B5FD;
+}
+
+.habit-stat-card:nth-child(2) {
+  background: linear-gradient(135deg, rgba(209, 250, 229, 0.7) 0%, rgba(255, 255, 255, 0.9) 100%);
+  border-color: #A7F3D0;
+}
+
+.habit-stat-card:nth-child(3) {
+  background: linear-gradient(135deg, rgba(224, 242, 254, 0.7) 0%, rgba(255, 255, 255, 0.9) 100%);
+  border-color: #93C5FD;
+}
+
+.habit-stat-card:nth-child(4) {
+  background: linear-gradient(135deg, rgba(254, 237, 213, 0.7) 0%, rgba(255, 255, 255, 0.9) 100%);
+  border-color: #FDE68A;
+}
+
+.habit-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -4px rgba(139, 92, 246, 0.15);
+}
+
+.habit-stat-icon {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.habit-stat-val {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.1;
+}
+
+.habit-stat-lbl {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.habit-stat-sub {
+  font-size: 0.72rem;
+  color: var(--text-subtle);
+  margin-top: 2px;
+}
+
+/* ── Add Habit Form Panel ── */
+.add-habit-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.add-habit-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.add-habit-panel-header:hover {
+  background: var(--bg-subtle);
+}
+
+.add-habit-panel-header h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-habit-panel-header h3 i {
+  color: var(--accent-primary);
+}
+
+.add-habit-panel-body {
+  padding: 16px 20px;
+  display: none;
+}
+
+.add-habit-panel-body.show {
+  display: block;
+}
+
+/* ── View Tabs ── */
+.habit-tabs-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--card-shadow);
+}
+
+.habit-tab-group {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-subtle);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.habit-tab-btn {
+  padding: 7px 18px;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.habit-tab-btn.active {
+  background: var(--bg-card);
+  color: var(--accent-primary);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.habit-tab-btn:hover:not(.active) {
+  color: var(--text-main);
+  background: var(--bg-hover);
+  border-radius: 7px;
+}
+
+/* ── Main Content Card ── */
+.habit-content-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.habit-content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.habit-content-header h2 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.habit-content-header h2 i {
+  color: var(--accent-primary);
+}
+
+/* ── Progress Bar in header ── */
+.habit-overall-progress {
+  height: 6px;
+  border-radius: 99px;
+  overflow: hidden;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  min-width: 120px;
+}
+
+.habit-overall-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-success));
+  transition: width 0.6s ease;
+}
+
+/* ── DAILY VIEW ── */
+.habit-daily-list {
+  padding: 12px 16px;
+}
+
+.habit-daily-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-subtle);
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+
+.habit-daily-item:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-hover);
+}
+
+.habit-daily-check {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+  font-size: 0.9rem;
+  color: transparent;
+}
+
+.habit-daily-check:hover {
+  border-color: var(--accent-success);
+  background: var(--accent-success-light);
+}
+
+.habit-daily-check.checked {
+  background: var(--accent-success);
+  border-color: var(--accent-success);
+  color: white;
+}
+
+.habit-daily-check.checked::after {
+  content: '✓';
+  color: white;
+  font-weight: 800;
+}
+
+.habit-daily-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.habit-daily-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.habit-daily-name.checked-name {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.habit-daily-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.habit-daily-streak {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-warning);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.habit-daily-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.habit-icon-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: all 0.2s;
+}
+
+.habit-icon-btn:hover {
+  background: var(--accent-danger-light);
+  color: var(--accent-danger);
+  border-color: var(--accent-danger);
+}
+
+/* ── WEEKLY VIEW — Table Grid ── */
+.habit-weekly-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.habit-weekly-table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+/* Table header row: days */
+.habit-weekly-table thead tr th {
+  padding: 10px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  border-bottom: 2px solid var(--border-color);
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+}
+
+.habit-weekly-table thead tr th:first-child {
+  text-align: left;
+  min-width: 180px;
+  padding-left: 16px;
+}
+
+.habit-weekly-table thead tr th.today-col {
+  color: var(--accent-primary);
+  background: var(--accent-primary-light);
+}
+
+/* Habit name column */
+.habit-weekly-table tbody tr td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--border-color);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.habit-weekly-table tbody tr td:first-child {
+  text-align: left;
+  padding-left: 16px;
+  vertical-align: middle;
+}
+
+.habit-weekly-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.habit-weekly-table tbody tr:hover td {
+  background: var(--bg-hover);
+}
+
+.habit-weekly-table tbody tr:hover td:first-child {
+  background: var(--bg-hover);
+}
+
+.habit-row-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: block;
+}
+
+.habit-row-freq {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 2px;
+  display: block;
+}
+
+/* Checkbox cells in weekly table */
+.habit-check-cell {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #E2E8F0;
+  background: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 auto;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-size: 0;
+  color: transparent;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.habit-check-cell:hover {
+  border-color: #34D399;
+  background: #D1FAE5;
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
+}
+
+/* Soft Green Completed */
+.habit-check-cell.h-done {
+  background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+  border-color: #34D399;
+  color: white;
+  box-shadow: 0 4px 12px rgba(52, 211, 153, 0.4);
+}
+
+.habit-check-cell.h-done::after {
+  content: '✓';
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: white;
+}
+
+.habit-check-cell.h-today-cell {
+  border-color: #8B5CF6;
+  border-width: 2px;
+}
+
+.habit-check-cell.h-today-cell:not(.h-done) {
+  background: #EDE9FE;
+}
+
+.habit-check-cell.h-future {
+  opacity: 0.3;
+  background: #F1F5F9;
+  border-color: #E2E8F0;
+  cursor: not-allowed;
+}
+
+.habit-check-cell.h-future:hover {
+  transform: none;
+  border-color: var(--border-color);
+  background: var(--bg-subtle);
+}
+
+/* Row color accent by index */
+.habit-row-accent {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* ── MONTHLY VIEW ── */
+.habit-monthly-area {
+  padding: 16px;
+}
+
+.habit-monthly-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.habit-month-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: all 0.2s;
+}
+
+.habit-month-nav-btn:hover {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+}
+
+.habit-month-nav-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-main);
+  min-width: 160px;
+  text-align: center;
+}
+
+.habit-monthly-grid-area {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.habit-month-card {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.habit-month-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-card);
+}
+
+.habit-month-card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.habit-month-card-pct {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-success);
+  background: var(--accent-success-light);
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+.habit-month-grid-hdr {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 6px 10px;
+  background: var(--bg-subtle);
+}
+
+.habit-month-grid-hdr span {
+  text-align: center;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.habit-month-dot-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 6px 10px 10px;
+  gap: 4px;
+}
+
+.habit-month-dot-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 0;
+}
+
+.habit-month-day-num {
+  font-size: 0.6rem;
+  color: var(--text-subtle);
+  font-weight: 600;
+}
+
+.habit-month-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  color: transparent;
+  transition: all 0.15s;
+}
+
+.habit-month-dot.m-done {
+  background: var(--accent-success);
+  border-color: var(--accent-success);
+}
+
+.habit-month-dot.m-done::after {
+  content: '✓';
+  font-size: 0.72rem;
+  color: white;
+  font-weight: 800;
+}
+
+.habit-month-dot.m-today {
+  border-color: var(--accent-primary);
+  border-width: 2px;
+}
+
+.habit-month-dot.m-today:not(.m-done) {
+  background: var(--accent-primary-light);
+}
+
+.habit-month-dot.m-future {
+  opacity: 0.3;
+}
+
+/* ── Empty state ── */
+.habit-empty-state {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--text-muted);
+}
+
+.habit-empty-state i {
+  font-size: 3rem;
+  color: var(--border-color);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.habit-empty-state h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.habit-empty-state p {
+  font-size: 0.85rem;
+}
+
+/* ── Habit color dots ── */
+.hc-0  { background: #6366F1; }
+.hc-1  { background: #22C55E; }
+.hc-2  { background: #F59E0B; }
+.hc-3  { background: #EC4899; }
+.hc-4  { background: #3B82F6; }
+.hc-5  { background: #A855F7; }
+.hc-6  { background: #14B8A6; }
+.hc-7  { background: #EF4444; }
+.hc-8  { background: #F97316; }
+.hc-9  { background: #84CC16; }
+
+/* ── Dark mode ── */
+body[data-theme="dark"] .habit-weekly-table thead tr th {
+  background: var(--bg-subtle);
+}
+
+body[data-theme="dark"] .habit-check-cell {
+  background: var(--bg-subtle);
+}
+
+body[data-theme="dark"] .habit-month-card {
+  background: var(--bg-card);
+}
+
+body[data-theme="dark"] .habit-month-card-header {
+  background: var(--bg-subtle);
+}
+
+/* ==========================================================================
+   MONTHLY MATRIX HABIT TRACKER SPREADSHEET LAYOUT (Reference Image Match)
+   ========================================================================== */
+
+.matrix-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* ── Top Row: Header Info, Sparkline Chart, Donut Ring ── */
+.matrix-header-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr 220px;
+  gap: 16px;
+  align-items: stretch;
+}
+
+@media (max-width: 992px) {
+  .matrix-header-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.matrix-card-box {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 18px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 24px -4px rgba(139, 92, 246, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+body[data-theme="dark"] .matrix-card-box {
+  background: rgba(30, 41, 59, 0.85);
+  border-color: rgba(51, 65, 85, 0.9);
+}
+
+.matrix-title-label {
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  border-bottom: 2px solid var(--accent-primary);
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+}
+
+.matrix-date-selects {
+  display: flex;
+  gap: 8px;
+}
+
+.matrix-date-selects select {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.matrix-sparkline-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.matrix-sparkline-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.matrix-donut-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.matrix-donut-val {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #8B5CF6;
+  line-height: 1;
+}
+
+/* ── 31-Day Main Matrix Table ── */
+.matrix-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px -5px rgba(139, 92, 246, 0.08);
+  padding: 4px;
+}
+
+body[data-theme="dark"] .matrix-table-wrapper {
+  background: rgba(30, 41, 59, 0.9);
+}
+
+.matrix-table {
+  width: 100%;
+  min-width: 1050px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.8rem;
+}
+
+.matrix-table th, .matrix-table td {
+  border-right: 1px solid rgba(226, 232, 240, 0.6);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  text-align: center;
+  vertical-align: middle;
+}
+
+body[data-theme="dark"] .matrix-table th, 
+body[data-theme="dark"] .matrix-table td {
+  border-color: rgba(51, 65, 85, 0.6);
+}
+
+/* Section Header Row (DAILY HABITS, WEEK-1, WEEK-2, WEEK-3, WEEK-4, WEEK-5, PROGRESS) */
+.matrix-th-section {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 8px 6px;
+  color: #1E1B4B;
+}
+
+body[data-theme="dark"] .matrix-th-section {
+  color: #F8FAFC;
+}
+
+.matrix-sec-habits {
+  background: #EDE9FE;
+  text-align: left !important;
+  padding-left: 14px !important;
+  min-width: 220px;
+}
+.matrix-sec-w1 { background: #CFFAFE; color: #0891B2 !important; }
+.matrix-sec-w2 { background: #D1FAE5; color: #059669 !important; }
+.matrix-sec-w3 { background: #FCE7F3; color: #DB2777 !important; }
+.matrix-sec-w4 { background: #FEF3C7; color: #D97706 !important; }
+.matrix-sec-w5 { background: #ECFCCB; color: #65A30D !important; }
+.matrix-sec-progress { background: #E0E7FF; color: #4338CA !important; min-width: 160px; }
+
+/* Subheader Row (DAYS, 1..31, GOAL, COMPLETED) */
+.matrix-th-sub {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 5px 2px;
+  background: rgba(248, 250, 252, 0.8);
+  color: var(--text-muted);
+}
+
+body[data-theme="dark"] .matrix-th-sub {
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.matrix-day-num {
+  font-size: 0.72rem;
+  font-weight: 800;
+  display: block;
+}
+
+.matrix-day-name {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  display: block;
+}
+
+/* Day Checkboxes (1..31) */
+.matrix-cell-check {
+  width: 24px;
+  height: 24px;
+  margin: 2px auto;
+  border: 1.5px solid #CBD5E1;
+  border-radius: 5px;
+  background: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-size: 0;
+}
+
+body[data-theme="dark"] .matrix-cell-check {
+  background: #1E293B;
+  border-color: #475569;
+}
+
+.matrix-cell-check:hover {
+  transform: scale(1.2);
+  border-color: #8B5CF6;
+}
+
+/* Color-coded checkmarks by week */
+.matrix-cell-check.w1-done { background: #06B6D4; border-color: #06B6D4; }
+.matrix-cell-check.w2-done { background: #10B981; border-color: #10B981; }
+.matrix-cell-check.w3-done { background: #EC4899; border-color: #EC4899; }
+.matrix-cell-check.w4-done { background: #F59E0B; border-color: #F59E0B; }
+.matrix-cell-check.w5-done { background: #84CC16; border-color: #84CC16; }
+
+.matrix-cell-check.w1-done::after,
+.matrix-cell-check.w2-done::after,
+.matrix-cell-check.w3-done::after,
+.matrix-cell-check.w4-done::after,
+.matrix-cell-check.w5-done::after {
+  content: '✓';
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: white;
+}
+
+.matrix-cell-check.future-cell {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+/* Habit Name Column */
+.matrix-habit-name-cell {
+  text-align: left !important;
+  padding: 8px 12px !important;
+  font-weight: 700;
+  font-size: 0.84rem;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.matrix-habit-name-cell:hover .matrix-habit-del {
+  opacity: 1;
+}
+
+.matrix-habit-del {
+  opacity: 0;
+  color: #EF4444;
+  cursor: pointer;
+  margin-left: 8px;
+  font-size: 0.75rem;
+  transition: opacity 0.2s;
+}
+
+/* Progress bar inside habit row */
+.matrix-progress-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+}
+
+.matrix-progress-track {
+  flex: 1;
+  height: 8px;
+  background: #E2E8F0;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.matrix-progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #8B5CF6, #34D399);
+  transition: width 0.4s ease;
+}
+
+/* ── Bottom Section 1: Weekly Progress Rings & Daily Summary ── */
+.matrix-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.matrix-rings-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 24px -4px rgba(139, 92, 246, 0.06);
+}
+
+body[data-theme="dark"] .matrix-rings-card {
+  background: rgba(30, 41, 59, 0.85);
+}
+
+.matrix-rings-header {
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-main);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.matrix-rings-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.matrix-ring-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.matrix-ring-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.matrix-summary-table {
+  width: 100%;
+  margin-top: 14px;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+  overflow-x: auto;
+}
+
+.matrix-summary-table td {
+  padding: 6px 4px;
+  text-align: center;
+  border-right: 1px solid rgba(226, 232, 240, 0.5);
+  font-weight: 700;
+}
+
+.matrix-summary-table tr:first-child td {
+  color: #10B981;
+  background: rgba(209, 250, 229, 0.4);
+}
+
+.matrix-summary-table tr:last-child td {
+  color: #EF4444;
+  background: rgba(254, 226, 226, 0.4);
+}
+
+.matrix-summary-lbl {
+  text-align: left !important;
+  padding-left: 12px !important;
+  font-weight: 800;
+  width: 180px;
+}
+
+/* ── Bottom Section 2: Weekly Routines & Notes ── */
+.matrix-weekly-routines-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 992px) {
+  .matrix-weekly-routines-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.matrix-routine-week-box {
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid var(--border-color);
+}
+
+body[data-theme="dark"] .matrix-routine-week-box {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.matrix-routine-week-title {
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid currentColor;
+}
+
+.matrix-routine-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.matrix-notes-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 24px -4px rgba(139, 92, 246, 0.06);
+}
+
+body[data-theme="dark"] .matrix-notes-card {
+  background: rgba(30, 41, 59, 0.85);
+}
+
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .habit-stats-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .habit-weekly-table thead tr th:first-child {
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 500px) {
+  .habit-stats-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .habit-tab-btn {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+}

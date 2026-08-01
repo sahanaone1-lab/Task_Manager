@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Workspace • AI Productivity Task Manager</title>
+  <script src="auth-precheck.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css?v=3.0" />
+  <link rel="stylesheet" href="sidebar.css?v=3.0" />
+  <link rel="stylesheet" href="chatbot.css?v=3.0" />
+</head>
+
+<body>
+  <button id="sidebarToggle" class="sidebar-toggle" aria-label="Open sidebar">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div id="sidebarProfileAvatar" class="avatar-container avatar-lg"></div>
+        <h2 id="sidebarUserName">Loading...</h2>
+        <p id="sidebarUserEmail">user@taskflow.dev</p>
+        <p id="sidebarUserPhone"></p>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a class="sidebar-link active" href="tasks.html"><i class="fa-solid fa-list-check"></i> Tasks</a>
+        <a class="sidebar-link" href="calendar.html"><i class="fa-regular fa-calendar-days"></i> Calendar</a>
+        <a class="sidebar-link" href="habits.html"><i class="fa-solid fa-bolt"></i> Habits</a>
+        <a class="sidebar-link" href="reports.html"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+        <a class="sidebar-link" href="settings.html"><i class="fa-solid fa-gear"></i> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a class="logout-btn" href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <!-- Page Hero Header -->
+      <header class="hero-card page-hero">
+        <div>
+          <p class="eyebrow"><i class="fa-solid fa-list-check"></i> Productivity Engine</p>
+          <h1>Task Workspace</h1>
+          <p class="subtext">Manage deliverables, subtasks, kanban columns, and intelligent task generation.</p>
+        </div>
+        <div>
+          <button id="openTemplateModalBtn" class="ghost-btn secondary" style="font-size: 0.85rem;">
+            <i class="fa-solid fa-folder-open"></i> Task Templates
+          </button>
+        </div>
+      </header>
+
+      <!-- 1. AI Task Generator Bar -->
+      <section class="ai-prompt-bar">
+        <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--accent-primary); font-size: 1.2rem;"></i>
+        <input type="text" id="aiPromptInput" placeholder="Try typing: 'I have an ML project due next week'..." />
+        <button id="aiGenerateBtn" type="button" class="ai-prompt-btn">
+          <i class="fa-solid fa-robot"></i> Generate Task
+        </button>
+      </section>
+
+      <!-- Search & Filters Header Bar -->
+      <section class="panel-card" style="padding: 16px 24px;">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <!-- Top Row: Search & View Switcher -->
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px;">
+            <div style="position: relative; flex: 1; min-width: 260px;">
+              <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+              <input type="text" id="taskSearch" class="input-field" style="padding-left: 40px;" placeholder="Smart Search across tasks, notes, categories..." />
+            </div>
+
+            <!-- View Switcher -->
+            <div class="view-tabs">
+              <button class="view-tab active" data-view="list"><i class="fa-solid fa-list"></i> List</button>
+              <button class="view-tab" data-view="timeline"><i class="fa-solid fa-timeline"></i> Timeline</button>
+            </div>
+          </div>
+
+          <!-- Filter Buttons Row -->
+          <div class="filter-row" id="filterRow">
+            <button class="filter-btn active" data-filter="all">All Tasks</button>
+            <button class="filter-btn" data-filter="favorites"><i class="fa-solid fa-star" style="color:#F59E0B;"></i> Favorites</button>
+            <button class="filter-btn" data-filter="pending">Pending</button>
+            <button class="filter-btn" data-filter="in_progress">In Progress</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
+            <button class="filter-btn" data-filter="overdue">Overdue</button>
+            <button class="filter-btn" data-filter="archived">Archive</button>
+            <button class="filter-btn" data-filter="trash"><i class="fa-solid fa-trash"></i> Trash</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Creation Form & Task List Grid -->
+      <section class="grid-two">
+        <!-- New Task Creation Form -->
+        <article class="panel-card">
+          <h2><i class="fa-solid fa-plus-circle"></i> Create Task</h2>
+          <form id="createTaskForm" class="task-form">
+            <input type="text" id="taskTitle" placeholder="Task title..." required />
+            
+            <textarea id="taskDescription" placeholder="Task description, subtasks notes, or specifications..." style="margin-top: 10px; height: 75px;"></textarea>
+
+            <div class="row-fields">
+              <label class="form-label">
+                Priority
+                <select id="taskPriority">
+                  <option value="Auto">Auto (AI Detect)</option>
+                  <option value="High">High</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </label>
+
+              <label class="form-label">
+                Due Date
+                <input type="date" id="taskDueDate" />
+              </label>
+
+              <label class="form-label">
+                Category
+                <select id="taskCategory">
+                  <option value="General">General (Auto)</option>
+                  <option value="Work">Work</option>
+                  <option value="Study">Study</option>
+                  <option value="Coding">Coding</option>
+                  <option value="Personal">Personal</option>
+                  <option value="Health">Health</option>
+                  <option value="Shopping">Shopping</option>
+                  <option value="Meetings">Meetings</option>
+                  <option value="Finance">Finance</option>
+                </select>
+              </label>
+            </div>
+
+            <!-- Subtasks Container in creation form -->
+            <div style="margin-top: 10px;">
+              <label class="form-label">Subtasks Checklist</label>
+              <div id="createSubtasksList" style="display: flex; flex-direction: column; gap: 6px; margin-top: 6px;"></div>
+              <div style="display: flex; gap: 8px; margin-top: 6px;">
+                <input type="text" id="newSubtaskInput" placeholder="Add subtask step..." style="padding: 6px 12px; font-size: 0.85rem;" />
+                <button type="button" id="addSubtaskStepBtn" class="ghost-btn secondary" style="padding: 6px 12px; font-size: 0.8rem;">Add</button>
+              </div>
+            </div>
+
+            <button id="addBtn" type="submit" style="width: 100%; margin-top: 16px;">
+              <i class="fa-solid fa-plus"></i> Add Task
+            </button>
+          </form>
+        </article>
+
+        <!-- Tasks Display Container (List, Kanban, or Timeline) -->
+        <article class="panel-card" style="min-height: 520px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h2><i class="fa-solid fa-list-check"></i> Tasks</h2>
+            <span id="taskCount" style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">0 tasks</span>
+          </div>
+
+          <!-- List View Container -->
+          <div id="listViewContainer">
+            <div id="taskList"></div>
+          </div>
+
+
+
+          <!-- Timeline View Container -->
+          <div id="timelineViewContainer" class="hidden">
+            <div id="timelineList" style="display: flex; flex-direction: column; gap: 14px; padding: 10px 0;"></div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <!-- Subtask & Detail Modal Drawer -->
+  <div id="taskModal" class="modal-backdrop hidden">
+    <div class="modal-card" style="max-width: 600px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 id="modalTaskTitle"><i class="fa-solid fa-pen-to-square"></i> Edit Task</h3>
+        <button id="closeTaskModalBtn" class="icon-btn">&times;</button>
+      </div>
+
+      <form id="editTaskForm" class="task-form">
+        <input type="hidden" id="editTaskId" />
+        <input type="text" id="editTitle" required placeholder="Task title..." />
+        <textarea id="editDescription" placeholder="Description..." style="margin-top: 10px; height: 70px;"></textarea>
+
+        <div class="row-fields">
+          <label class="form-label">
+            Priority
+            <select id="editPriority">
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </label>
+
+          <label class="form-label">
+            Due Date
+            <input type="date" id="editDueDate" />
+          </label>
+
+          <label class="form-label">
+            Category
+            <select id="editCategory">
+              <option value="Work">Work</option>
+              <option value="Study">Study</option>
+              <option value="Coding">Coding</option>
+              <option value="Personal">Personal</option>
+              <option value="Health">Health</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Meetings">Meetings</option>
+              <option value="Finance">Finance</option>
+              <option value="General">General</option>
+            </select>
+          </label>
+        </div>
+
+        <!-- Subtasks List inside Modal -->
+        <div style="margin-top: 12px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+          <label class="form-label">Subtasks & Steps</label>
+          <div id="modalSubtasksList" style="display: flex; flex-direction: column; gap: 6px; margin: 8px 0;"></div>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="modalSubtaskInput" placeholder="Add a subtask..." style="padding: 6px 12px; font-size: 0.85rem;" />
+            <button type="button" id="modalAddSubtaskBtn" class="ghost-btn secondary" style="padding: 6px 12px; font-size: 0.8rem;">Add</button>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+          <button id="cancelModalBtn" type="button" class="ghost-btn secondary">Cancel</button>
+          <button id="saveModalBtn" type="submit" class="ghost-btn"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="confirmModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <h3 style="color: var(--accent-danger);"><i class="fa-solid fa-triangle-exclamation"></i> Confirm Delete</h3>
+      <p style="margin-top: 10px; color: var(--text-muted);">Are you sure you want to delete this task?</p>
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <button id="cancelDeleteBtn" type="button" class="ghost-btn secondary">Cancel</button>
+        <button id="confirmDeleteBtn" type="button" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="chatbot.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

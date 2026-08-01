@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register • Smart Task Manager</title>
+  <script src="auth-precheck.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css?v=3.0" />
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-card">
+
+      <!-- Left AI Panel -->
+      <div class="auth-left">
+        <div class="app-logo"><i class="fa-solid fa-cube"></i></div>
+        <h2>Smart Task Manager</h2>
+        <p>Create your free account and start managing tasks, calendar, habits, and reports today.</p>
+        <div class="auth-features">
+          <div class="auth-feature">
+            <span class="feat-icon"><i class="fa-solid fa-list-check"></i></span> Priority & category tracking
+          </div>
+          <div class="auth-feature">
+            <span class="feat-icon"><i class="fa-regular fa-calendar"></i></span> Calendar & deadline alerts
+          </div>
+          <div class="auth-feature">
+            <span class="feat-icon"><i class="fa-solid fa-bolt"></i></span> Habit streak tracker
+          </div>
+          <div class="auth-feature">
+            <span class="feat-icon"><i class="fa-solid fa-lock"></i></span> Private workspace isolation
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Form Panel -->
+      <div class="auth-right">
+        <h1>Create Account ✨</h1>
+        <p class="subtext">Enter your details to create your workspace.</p>
+
+        <div id="authError" class="auth-error hidden"></div>
+
+        <form id="registerForm" class="task-form">
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-solid fa-user"></i></span>
+            <input type="text" name="name" placeholder="Full name" required />
+          </div>
+
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
+            <input type="email" name="email" placeholder="Email address" required />
+          </div>
+
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+            <input type="password" name="password" id="passwordInput" placeholder="Password (min 8 chars)" required minlength="8" />
+          </div>
+
+          <!-- Password strength bar -->
+          <div class="strength-bar">
+            <div class="strength-fill" id="strengthFill"></div>
+          </div>
+          <div class="strength-text" id="strengthText" style="font-size:0.8rem; text-align:right; min-height:1.2rem;"></div>
+
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-solid fa-key"></i></span>
+            <input type="password" name="confirm_password" placeholder="Confirm password" required minlength="8" />
+          </div>
+
+          <button type="submit" class="ghost-btn" style="margin-top:8px;">
+            Create Free Account <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <div class="auth-divider">or</div>
+
+        <p class="auth-footnote">
+          Already registered? <a href="login.html">Sign in to your account</a>
+        </p>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('passwordInput').addEventListener('input', function() {
+      const val = this.value;
+      const fill = document.getElementById('strengthFill');
+      const text = document.getElementById('strengthText');
+
+      let strength = 0;
+      if (val.length >= 8) strength++;
+      if (/[A-Z]/.test(val)) strength++;
+      if (/[0-9]/.test(val)) strength++;
+      if (/[^A-Za-z0-9]/.test(val)) strength++;
+
+      const levels = [
+        { width: '0%',   color: 'transparent', label: '' },
+        { width: '25%',  color: '#f43f5e', label: 'Weak' },
+        { width: '50%',  color: '#f59e0b', label: 'Fair' },
+        { width: '75%',  color: '#06b6d4', label: 'Good' },
+        { width: '100%', color: '#10b981', label: 'Strong ✓' },
+      ];
+
+      fill.style.width = levels[strength].width;
+      fill.style.background = levels[strength].color;
+      text.textContent = levels[strength].label;
+      text.style.color = levels[strength].color;
+    });
+  </script>
+
+  <script src="auth.js"></script>
+</body>
+</html>

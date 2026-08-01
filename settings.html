@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings • AI Productivity Task Manager</title>
+  <script src="auth-precheck.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css?v=3.0" />
+  <link rel="stylesheet" href="sidebar.css?v=3.0" />
+  <link rel="stylesheet" href="chatbot.css?v=3.0" />
+</head>
+<body>
+  <button id="sidebarToggle" class="sidebar-toggle" aria-label="Open sidebar">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+  
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div id="sidebarProfileAvatar" class="avatar-container avatar-lg"></div>
+        <h2 id="sidebarUserName">Loading...</h2>
+        <p id="sidebarUserEmail">user@taskflow.dev</p>
+        <p id="sidebarUserPhone"></p>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a class="sidebar-link" href="tasks.html"><i class="fa-solid fa-list-check"></i> Tasks</a>
+        <a class="sidebar-link" href="calendar.html"><i class="fa-regular fa-calendar-days"></i> Calendar</a>
+        <a class="sidebar-link" href="habits.html"><i class="fa-solid fa-bolt"></i> Habits</a>
+        <a class="sidebar-link" href="reports.html"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+        <a class="sidebar-link active" href="settings.html"><i class="fa-solid fa-gear"></i> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a class="logout-btn" href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="hero-card page-hero">
+        <div>
+          <p class="eyebrow"><i class="fa-solid fa-sliders"></i> Customization & Security</p>
+          <h1>Account & Theme Settings</h1>
+          <p class="subtext">Personalize workspace theme, custom accent color, security password, and notifications.</p>
+        </div>
+      </header>
+
+      <!-- Theme & Accent Color Personalization -->
+      <section class="panel-card">
+        <h2><i class="fa-solid fa-palette"></i> Appearance & Theme Customization</h2>
+        <div class="task-form" style="margin-top: 14px;">
+          <div class="grid-two">
+            <label class="form-label">
+              Interface Theme Mode
+              <select id="themeSelect">
+                <option value="light">Light Mode (Clean #F8FAFC)</option>
+                <option value="dark">Dark Mode (Sleek #0F172A)</option>
+              </select>
+            </label>
+
+            <label class="form-label">
+              Accent Color
+              <select id="accentColorSelect">
+                <option value="#6366F1">Indigo (#6366F1)</option>
+                <option value="#22C55E">Emerald (#22C55E)</option>
+                <option value="#8B5CF6">Violet (#8B5CF6)</option>
+                <option value="#F43F5E">Rose (#F43F5E)</option>
+                <option value="#F59E0B">Amber (#F59E0B)</option>
+              </select>
+            </label>
+          </div>
+
+          <button id="saveThemeBtn" class="ghost-btn" type="button" style="margin-top: 12px;">
+            <i class="fa-solid fa-paint-roller"></i> Apply Theme Preferences
+          </button>
+        </div>
+      </section>
+
+      <!-- User Profile Settings -->
+      <section class="panel-card">
+        <h2><i class="fa-solid fa-id-card"></i> User Profile Settings</h2>
+        <div class="task-form" id="settingsForm" style="margin-top: 14px;">
+          <div class="profile-block" style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:16px;">
+            <div id="profileAvatarContainer" class="avatar-container avatar-xl"></div>
+            <div>
+              <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-main); margin-bottom:4px;">Profile Photo</h3>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">Click your avatar or use the button below to upload a picture or revert to initials.</p>
+              <button type="button" class="ghost-btn secondary" onclick="window.triggerAvatarUploadModal()">
+                <i class="fas fa-camera"></i> Change / Upload Photo
+              </button>
+            </div>
+          </div>
+          
+          <div class="grid-two">
+            <label class="form-label">
+              Full Name
+              <input id="profileNameInput" type="text" placeholder="Full Name" disabled />
+            </label>
+            <label class="form-label">
+              Email Address
+              <input id="profileEmailInput" type="email" placeholder="Email Address" readonly disabled />
+            </label>
+          </div>
+
+          <label class="form-label">
+            Phone Number
+            <input id="profilePhoneInput" type="tel" placeholder="+91 99999 99999" disabled />
+          </label>
+
+          <label class="form-label">
+            Bio / Role
+            <textarea id="profileBioInput" placeholder="Brief bio or role description..." disabled style="height: 70px;"></textarea>
+          </label>
+
+          <div class="settings-actions" style="margin-top: 12px; display:flex; gap:12px;">
+            <button id="editProfileBtn" class="ghost-btn" type="button"><i class="fa-solid fa-user-pen"></i> Edit Profile</button>
+            <button id="saveProfileBtn" class="ghost-btn" style="display:none;" type="button"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+            <button id="cancelProfileBtn" class="ghost-btn secondary" style="display:none;" type="button">Cancel</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Security Password Change -->
+      <section class="panel-card">
+        <h2><i class="fa-solid fa-shield-halved"></i> Change Password</h2>
+        <form id="passwordForm" class="task-form" style="margin-top: 14px;">
+          <div class="grid-two">
+            <label class="form-label">
+              Current Password
+              <input type="password" id="currentPasswordInput" required placeholder="••••••••" />
+            </label>
+            <label class="form-label">
+              New Password
+              <input type="password" id="newPasswordInput" required placeholder="••••••••" />
+            </label>
+          </div>
+          <button type="submit" class="ghost-btn" style="margin-top: 12px;">
+            <i class="fa-solid fa-lock"></i> Update Password
+          </button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="chatbot.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

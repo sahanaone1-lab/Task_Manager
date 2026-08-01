@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habits • AI Productivity Task Manager</title>
+  <meta name="description" content="Habit Tracker — Daily, Weekly and Monthly habit tracking with streak counters, progress bars and full MySQL integration." />
+  <script src="auth-precheck.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css?v=5.0" />
+  <link rel="stylesheet" href="sidebar.css?v=3.0" />
+  <link rel="stylesheet" href="habits.css?v=2.0" />
+  <link rel="stylesheet" href="chatbot.css?v=3.0" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <button id="sidebarToggle" class="sidebar-toggle" aria-label="Open sidebar">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div id="sidebarProfileAvatar" class="avatar-container avatar-lg"></div>
+        <h2 id="sidebarUserName">Loading...</h2>
+        <p id="sidebarUserEmail">user@taskflow.dev</p>
+        <p id="sidebarUserPhone"></p>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a class="sidebar-link" href="tasks.html"><i class="fa-solid fa-list-check"></i> Tasks</a>
+        <a class="sidebar-link" href="calendar.html"><i class="fa-regular fa-calendar-days"></i> Calendar</a>
+        <a class="sidebar-link active" href="habits.html"><i class="fa-solid fa-bolt"></i> Habits</a>
+        <a class="sidebar-link" href="reports.html"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+        <a class="sidebar-link" href="settings.html"><i class="fa-solid fa-gear"></i> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a class="logout-btn" href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-panel">
+
+      <!-- Page Header -->
+      <header class="hero-card page-hero" style="padding: 20px 28px;">
+        <div>
+          <p class="eyebrow"><i class="fa-solid fa-fire"></i> Routine &amp; Consistency</p>
+          <h1 style="font-size:1.5rem; margin-bottom:4px;">Habit Tracker</h1>
+          <p class="subtext">Track daily, weekly and monthly habits. Build streaks, stay consistent.</p>
+        </div>
+        <!-- Summary header stats -->
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div style="text-align:center; background:var(--accent-primary-light); border:1px solid var(--accent-primary); border-radius:12px; padding:10px 16px;">
+            <strong id="habitHeaderTotal" style="font-size:1.4rem; font-weight:800; color:var(--accent-primary); display:block;">0</strong>
+            <span style="font-size:0.68rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Total Habits</span>
+          </div>
+          <div style="text-align:center; background:var(--accent-success-light); border:1px solid var(--accent-success); border-radius:12px; padding:10px 16px;">
+            <strong id="habitHeaderDoneToday" style="font-size:1.4rem; font-weight:800; color:var(--accent-success); display:block;">0</strong>
+            <span style="font-size:0.68rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Done Today</span>
+          </div>
+          <div style="text-align:center; background:var(--accent-warning-light); border:1px solid var(--accent-warning); border-radius:12px; padding:10px 16px;">
+            <strong id="habitHeaderAvgPct" style="font-size:1.4rem; font-weight:800; color:var(--accent-warning); display:block;">0%</strong>
+            <span style="font-size:0.68rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Avg Completion</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Stats Strip -->
+      <div class="habit-stats-strip">
+        <div class="habit-stat-card">
+          <div class="habit-stat-icon">📋</div>
+          <div class="habit-stat-val" id="hStatTotal">0</div>
+          <div class="habit-stat-lbl">Total Habits</div>
+        </div>
+        <div class="habit-stat-card">
+          <div class="habit-stat-icon">✅</div>
+          <div class="habit-stat-val" id="hStatDoneToday">0/0</div>
+          <div class="habit-stat-lbl">Done Today</div>
+        </div>
+        <div class="habit-stat-card">
+          <div class="habit-stat-icon">📊</div>
+          <div class="habit-stat-val" id="hStatAvgPct">0%</div>
+          <div class="habit-stat-lbl">Avg Completion</div>
+        </div>
+        <div class="habit-stat-card">
+          <div class="habit-stat-icon">🔥</div>
+          <div class="habit-stat-val" id="hStatMaxStreak">0</div>
+          <div class="habit-stat-lbl">Best Streak</div>
+        </div>
+      </div>
+
+      <!-- Add Habit Collapsible Panel -->
+      <div class="add-habit-panel">
+        <div class="add-habit-panel-header" id="addHabitToggle">
+          <h3><i class="fa-solid fa-circle-plus"></i> Add New Habit</h3>
+          <i class="fa-solid fa-chevron-down" style="color:var(--text-muted);"></i>
+        </div>
+        <div class="add-habit-panel-body" id="addHabitFormBody">
+          <div class="row-fields" style="grid-template-columns: 2fr 1fr; gap: 12px; display:grid;">
+            <label class="form-label" style="margin:0;">
+              Habit Title *
+              <input type="text" id="habitNewTitle" placeholder="e.g. Morning Workout, Read 30 mins" style="margin-top:6px;" />
+            </label>
+            <label class="form-label" style="margin:0;">
+              Frequency
+              <select id="habitNewFreq" style="margin-top:6px;">
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Monthly">Monthly</option>
+              </select>
+            </label>
+          </div>
+          <label class="form-label" style="margin:12px 0 0;">
+            Description (optional)
+            <input type="text" id="habitNewDesc" placeholder="Goal detail or notes..." style="margin-top:6px;" />
+          </label>
+          <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+            <button id="addHabitSubmitBtn" class="ghost-btn" style="padding:8px 20px;">
+              <i class="fa-solid fa-plus"></i> Add Habit
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Bar: Monthly Matrix | Weekly | Daily -->
+      <div class="habit-tabs-bar">
+        <div class="habit-tab-group">
+          <button class="habit-tab-btn active" data-view="monthly">
+            <i class="fa-solid fa-table-cells"></i> Monthly Matrix
+          </button>
+          <button class="habit-tab-btn" data-view="weekly">
+            <i class="fa-solid fa-calendar-week"></i> Weekly
+          </button>
+          <button class="habit-tab-btn" data-view="daily">
+            <i class="fa-regular fa-calendar-check"></i> Daily
+          </button>
+        </div>
+        <span style="font-size:0.78rem; color:var(--text-muted);">
+          <i class="fa-solid fa-circle-info"></i> Click checkboxes to toggle completion (saved to MySQL)
+        </span>
+      </div>
+
+      <!-- Main Board Area — content rendered by habits-app.js -->
+      <div class="habit-content-card">
+        <div id="habitsBoardArea">
+          <!-- Default loading state -->
+          <div class="habit-content-header">
+            <h2><i class="fa-regular fa-calendar-check"></i> Loading Habits...</h2>
+          </div>
+          <div style="padding:40px; text-align:center; color:var(--text-muted);">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size:1.5rem;"></i>
+            <p style="margin-top:10px; font-size:0.88rem;">Loading your habits from database...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legacy ID kept for backward compat with script.js -->
+      <div id="habitsBoard" style="display:none;"></div>
+
+    </main>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="chatbot.js"></script>
+  <script src="script.js?v=5.0"></script>
+  <!-- Habits module (loads AFTER script.js, handles all habit interactions) -->
+  <script src="habits-app.js?v=2.0"></script>
+</body>
+</html>

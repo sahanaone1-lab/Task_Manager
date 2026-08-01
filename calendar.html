@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calendar • AI Productivity Task Manager</title>
+  <meta name="description" content="Interactive monthly calendar — view tasks by due date, add and manage tasks directly from any date, with priority color coding." />
+  <script src="auth-precheck.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css?v=5.0" />
+  <link rel="stylesheet" href="sidebar.css?v=3.0" />
+  <link rel="stylesheet" href="calendar.css?v=2.0" />
+  <link rel="stylesheet" href="chatbot.css?v=3.0" />
+</head>
+<body>
+  <button id="sidebarToggle" class="sidebar-toggle" aria-label="Open sidebar">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div id="sidebarProfileAvatar" class="avatar-container avatar-lg"></div>
+        <h2 id="sidebarUserName">Loading...</h2>
+        <p id="sidebarUserEmail">user@taskflow.dev</p>
+        <p id="sidebarUserPhone"></p>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a class="sidebar-link" href="tasks.html"><i class="fa-solid fa-list-check"></i> Tasks</a>
+        <a class="sidebar-link active" href="calendar.html"><i class="fa-regular fa-calendar-days"></i> Calendar</a>
+        <a class="sidebar-link" href="habits.html"><i class="fa-solid fa-bolt"></i> Habits</a>
+        <a class="sidebar-link" href="reports.html"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+        <a class="sidebar-link" href="settings.html"><i class="fa-solid fa-gear"></i> Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a class="logout-btn" href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-panel">
+
+      <!-- Page Title -->
+      <header class="hero-card page-hero" style="padding: 20px 28px;">
+        <div>
+          <p class="eyebrow"><i class="fa-regular fa-calendar"></i> Task Calendar</p>
+          <h1 style="font-size:1.5rem; margin-bottom:4px;">Monthly Calendar</h1>
+          <p class="subtext">Click any date to view, add, edit or complete tasks.</p>
+        </div>
+        <!-- Priority Legend -->
+        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+          <span style="display:flex;align-items:center;gap:5px;font-size:0.78rem;font-weight:600;color:var(--text-muted);">
+            <span style="width:12px;height:12px;border-radius:3px;background:var(--accent-danger);display:inline-block;"></span> High
+          </span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:0.78rem;font-weight:600;color:var(--text-muted);">
+            <span style="width:12px;height:12px;border-radius:3px;background:var(--accent-warning);display:inline-block;"></span> Medium
+          </span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:0.78rem;font-weight:600;color:var(--text-muted);">
+            <span style="width:12px;height:12px;border-radius:3px;background:var(--accent-success);display:inline-block;"></span> Low
+          </span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:0.78rem;font-weight:600;color:var(--text-muted);">
+            <span style="width:12px;height:12px;border-radius:3px;background:var(--accent-danger);display:inline-block;opacity:0.4;"></span> Overdue
+          </span>
+        </div>
+      </header>
+
+      <!-- Calendar + Sidebar Layout -->
+      <div class="cal-app-wrapper">
+
+        <!-- ── Main Calendar Area ── -->
+        <div class="cal-main-area">
+
+          <!-- Navigation Bar -->
+          <div class="cal-nav-bar">
+            <!-- Month + Year Title -->
+            <div class="cal-title-group" id="calendarMonthYear">
+              <span class="cal-month-text">Loading...</span>
+            </div>
+
+            <!-- Controls -->
+            <div class="cal-nav-controls">
+              <button class="cal-nav-btn cal-today-btn" id="todayBtn" title="Go to today">Today</button>
+              <button class="cal-nav-btn" id="prevMonth" title="Previous month">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <button class="cal-nav-btn" id="nextMonth" title="Next month">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+              <select class="cal-select" id="monthSelect" title="Jump to month">
+                <!-- Populated by JS -->
+              </select>
+              <select class="cal-select" id="yearSelect" title="Jump to year">
+                <!-- Populated by JS -->
+              </select>
+            </div>
+          </div>
+
+          <!-- Weekday Header (Sun–Sat) -->
+          <div class="cal-weekday-header">
+            <div class="cal-weekday-cell">Sun</div>
+            <div class="cal-weekday-cell">Mon</div>
+            <div class="cal-weekday-cell">Tue</div>
+            <div class="cal-weekday-cell">Wed</div>
+            <div class="cal-weekday-cell">Thu</div>
+            <div class="cal-weekday-cell">Fri</div>
+            <div class="cal-weekday-cell">Sat</div>
+          </div>
+
+          <!-- Loading Indicator -->
+          <div id="calendarLoading" class="cal-loading" style="display:none;">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <span>Loading tasks...</span>
+          </div>
+
+          <!-- Calendar Grid — filled by JS -->
+          <div id="calendarGrid" class="cal-grid"></div>
+
+          <!-- Legend Bar -->
+          <div class="cal-legend-bar">
+            <div class="cal-legend-item">
+              <div class="cal-legend-dot" style="background:var(--accent-primary);border-radius:50%;"></div> Today
+            </div>
+            <div class="cal-legend-item">
+              <div class="cal-legend-dot" style="background:var(--accent-danger-light);border:1px solid var(--accent-danger);"></div> Overdue Tasks
+            </div>
+            <div class="cal-legend-item">
+              <i class="fa-solid fa-circle" style="color:var(--accent-danger);font-size:0.6rem;"></i> High Priority
+            </div>
+            <div class="cal-legend-item">
+              <i class="fa-solid fa-circle" style="color:var(--accent-warning);font-size:0.6rem;"></i> Medium Priority
+            </div>
+            <div class="cal-legend-item">
+              <i class="fa-solid fa-circle" style="color:var(--accent-success);font-size:0.6rem;"></i> Low Priority
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Right Sidebar ── -->
+        <div class="cal-sidebar-area">
+
+          <!-- Mini Calendar (next month) -->
+          <div class="mini-cal-card">
+            <div class="mini-cal-header" id="miniCalHeader">Next Month</div>
+            <div class="mini-cal-grid-hdr">
+              <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+            </div>
+            <div class="mini-cal-grid" id="miniCalGrid">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Upcoming Reminders -->
+          <div class="upcoming-card">
+            <h3><i class="fa-solid fa-bell"></i> Upcoming Tasks</h3>
+            <div id="upcomingList">
+              <p style="font-size:0.8rem;color:var(--text-muted);">Loading...</p>
+            </div>
+          </div>
+
+          <!-- Quick Stats Card -->
+          <div class="upcoming-card">
+            <h3><i class="fa-solid fa-chart-bar"></i> This Month</h3>
+            <div id="calMonthStats">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-color);">
+                <span style="font-size:0.8rem;color:var(--text-muted);">Total Tasks</span>
+                <strong id="calStatTotal" style="font-size:0.88rem;color:var(--text-main);">0</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-color);">
+                <span style="font-size:0.8rem;color:var(--text-muted);">Completed</span>
+                <strong id="calStatDone" style="font-size:0.88rem;color:var(--accent-success);">0</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-color);">
+                <span style="font-size:0.8rem;color:var(--text-muted);">Overdue</span>
+                <strong id="calStatOverdue" style="font-size:0.88rem;color:var(--accent-danger);">0</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+                <span style="font-size:0.8rem;color:var(--text-muted);">High Priority</span>
+                <strong id="calStatHigh" style="font-size:0.88rem;color:var(--accent-danger);">0</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="chatbot.js"></script>
+  <script src="script.js?v=5.0"></script>
+  <!-- Calendar module (loads AFTER script.js, overrides old calendar handlers) -->
+  <script src="calendar-app.js?v=2.0"></script>
+</body>
+</html>
